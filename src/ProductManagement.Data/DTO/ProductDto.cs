@@ -1,6 +1,6 @@
 namespace ProductManagement.Data.DTO;
 
-public class ProductRequestDto
+public class ProductDto : EntityDto
 {
     public string Name { get; set; } = "";
     public decimal Price { get; set; }

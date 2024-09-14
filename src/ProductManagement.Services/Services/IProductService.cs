@@ -5,9 +5,9 @@ namespace ProductManagement.Services.Services;
 
 public interface IProductService
 {
-    Task<IEnumerable<ProductResponseDto>> GetAllProducts();
-    Task<ProductResponseDto> GetProductById(Guid id);
-    Task<ProductRecord> CreateProduct(ProductRequestDto productDto);
-    Task UpdateProduct(ProductRequestDto productDto, Guid id);
+    Task<IEnumerable<ProductDto>> GetAllProducts();
+    Task<ProductDto> GetProductById(Guid id);
+    Task<ProductRecord> CreateProduct(ProductDto productDto);
+    Task UpdateProduct(ProductDto productDto, Guid id);
     Task DeleteProduct(Guid id);
 }

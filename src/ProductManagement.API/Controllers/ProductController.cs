@@ -30,20 +30,24 @@ namespace ProductManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] ProductRequestDto productDto)
+        public async Task<IActionResult> AddProduct([FromBody] ProductDto productDto)
         {
             var product = await productService.CreateProduct(productDto);
             return CreatedAtAction(nameof(GetProduct), new { Id = product.Id }, product);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(
-            [FromBody] ProductRequestDto productDto,
-            Guid id
-        )
+        public async Task<IActionResult> UpdateProduct([FromBody] ProductDto productDto, Guid id)
         {
             await productService.UpdateProduct(productDto, id);
-            return NoContent();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(Guid id)
+        {
+            await productService.DeleteProduct(id);
+            return Ok();
         }
     }
 }
