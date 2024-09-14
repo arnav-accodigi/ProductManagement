@@ -15,7 +15,7 @@ public class ExceptionFilter : IExceptionFilter
             _ => StatusCodes.Status500InternalServerError
         };
 
-        context.Result = new ObjectResult(new { errors = context.Exception.Message })
+        context.Result = new ObjectResult(new { error = context.Exception.Message })
         {
             StatusCode = statusCode
         };

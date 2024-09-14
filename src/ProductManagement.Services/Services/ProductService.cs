@@ -14,26 +14,26 @@ public class ProductService : IProductService
         this.productRepository = productRepository;
     }
 
-    public async Task<IEnumerable<ProductDto>> GetAllProducts()
+    public async Task<IEnumerable<ProductResponseDto>> GetAllProducts()
     {
         var products = await productRepository.GetAll();
-        return products.Select(ProductMapper.ToProductDTO);
+        return products.Select(ProductMapper.ToProductResponseDTO);
     }
 
-    public async Task<ProductDto> GetProductById(Guid id)
+    public async Task<ProductResponseDto> GetProductById(Guid id)
     {
         var product = await productRepository.GetById(id);
-        return ProductMapper.ToProductDTO(product);
+        return ProductMapper.ToProductResponseDTO(product);
     }
 
-    public Task CreateProduct(ProductDto productDto)
+    public Task<ProductRecord> CreateProduct(ProductRequestDto productDto)
     {
         var productRecord = ProductMapper.ToProductRecord(productDto);
         productRecord.Id = Guid.NewGuid();
         return productRepository.Create(productRecord);
     }
 
-    public Task UpdateProduct(ProductDto productDto, Guid id)
+    public Task UpdateProduct(ProductRequestDto productDto, Guid id)
     {
         var productRecord = ProductMapper.ToProductRecord(productDto);
         productRecord.Id = id;

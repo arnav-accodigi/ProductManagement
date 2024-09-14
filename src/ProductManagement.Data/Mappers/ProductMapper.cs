@@ -5,9 +5,9 @@ namespace ProductManagement.Data.Mappers;
 
 public static class ProductMapper
 {
-    public static ProductDto ToProductDTO(ProductRecord productRecord)
+    public static ProductResponseDto ToProductResponseDTO(ProductRecord productRecord)
     {
-        return new ProductDto()
+        return new ProductResponseDto()
         {
             Id = productRecord.Id,
             Name = productRecord.Name,
@@ -16,7 +16,7 @@ public static class ProductMapper
         };
     }
 
-    public static ProductRecord ToProductRecord(ProductDto productDto)
+    public static ProductRecord ToProductRecord(ProductRequestDto productDto)
     {
         return new ProductRecord()
         {

@@ -20,10 +20,11 @@ public class ProductRepository : IProductRepository
         return await Task.FromResult(product);
     }
 
-    public async Task Create(ProductRecord productRecord)
+    public async Task<ProductRecord> Create(ProductRecord productRecord)
     {
         // TODO: Add validation for valid product
         await Task.Run(() => products.Add(productRecord));
+        return productRecord;
     }
 
     public async Task Update(ProductRecord productRecord)
