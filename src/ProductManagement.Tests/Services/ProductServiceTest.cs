@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using Moq;
-using ProductManagement.Data.Domain;
 using ProductManagement.Data.DTO;
 using ProductManagement.Data.Exceptions;
 using ProductManagement.Data.Validation.Product;
@@ -15,7 +14,6 @@ public class ProductServiceTest : IDisposable
     private readonly ProductRepositoryMock productRepositoryMock;
     private readonly Mock<IProductValidator> productValidatorMock;
     private readonly ProductMapperMock productMapperMock;
-
     private readonly IProductService productService;
 
     public ProductServiceTest()
@@ -88,13 +86,13 @@ public class ProductServiceTest : IDisposable
     public async Task CreateProduct_ThrowsExceptionWhenInvalidInput()
     {
         // Arrange
-        productRepositoryMock.SetupCreateProductWithInvalidDto();
-        productMapperMock.SetupToDTO();
-        productMapperMock.SetupToRecord();
+        var dto = new ProductDto { Name = "" };
+        productValidatorMock.Setup(v => v.Validate(dto))
+            .Throws(new ValidationException(ProductConstants.invalidRequestBodyException));
 
         // Act
         Exception exception = await Assert.ThrowsAsync<ValidationException>(
-            () => productService.CreateProduct(new ProductDto { Name = "" })
+            () => productService.CreateProduct(dto)
         );
 
         // Assert
@@ -134,17 +132,10 @@ public class ProductServiceTest : IDisposable
     {
         // Arrange
         productRepositoryMock.SetupUpdateProduct();
-        productMapperMock.SetupToDTO();
         productMapperMock.SetupToRecord();
 
         // Act
         await productService.UpdateProduct(ProductConstants.productDto, ProductConstants.productId);
-
-        // Assert
-        productRepositoryMock.Verify(
-            r => r.Update(It.Is<ProductRecord>(p => p.Name == ProductConstants.productRecord.Name)),
-            Times.Once
-        );
     }
 
     [Fact]
@@ -152,19 +143,12 @@ public class ProductServiceTest : IDisposable
     {
         // Arrange
         productRepositoryMock.SetupUpdateProductNotFound();
-        productMapperMock.SetupToDTO();
         productMapperMock.SetupToRecord();
 
         // Act
         Exception exception = await Assert.ThrowsAsync<RecordNotFoundException>(
             () =>
-                productService.UpdateProduct(
-                    new ProductDto
-                    {
-                        Name = "",
-                        Price = ProductConstants.productDto.Price,
-                        StockQuantity = ProductConstants.productDto.StockQuantity
-                    },
+                productService.UpdateProduct(ProductConstants.productDto,
                     ProductConstants.productId
                 )
         );

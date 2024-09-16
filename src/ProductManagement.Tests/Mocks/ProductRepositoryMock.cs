@@ -53,7 +53,7 @@ public class ProductRepositoryMock : Mock<IProductRepository>
 
     public void SetupUpdateProductNotFound()
     {
-        Setup(r => r.Update(It.Is<ProductRecord>(p => p.Name == "")))
+        Setup(r => r.Update(It.Is<ProductRecord>(p => p.Name == ProductConstants.productRecord.Name)))
             .ThrowsAsync(new RecordNotFoundException(ProductConstants.notFoundMessage));
     }
 }
