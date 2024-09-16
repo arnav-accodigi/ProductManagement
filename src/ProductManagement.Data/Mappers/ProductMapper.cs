@@ -3,9 +3,9 @@ using ProductManagement.Data.DTO;
 
 namespace ProductManagement.Data.Mappers;
 
-public static class ProductMapper
+public class ProductMapper : IProductMapper
 {
-    public static ProductDto ToProductDTO(ProductRecord productRecord)
+    public ProductDto ToDTO(ProductRecord productRecord)
     {
         return new ProductDto()
         {
@@ -16,11 +16,10 @@ public static class ProductMapper
         };
     }
 
-    public static ProductRecord ToProductRecord(ProductDto productDto, Guid id)
+    public ProductRecord ToRecord(ProductDto productDto)
     {
         return new ProductRecord()
         {
-            Id = id,
             Name = productDto.Name,
             Price = productDto.Price,
             StockQuantity = productDto.StockQuantity

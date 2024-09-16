@@ -52,7 +52,7 @@ public class Validator
 
     public Validator NotEmptyString(string paramName, string value)
     {
-        if (value.Length == 0)
+        if (string.IsNullOrWhiteSpace(value))
         {
             errorMessages.Add($"{paramName} cannot be empty");
         }

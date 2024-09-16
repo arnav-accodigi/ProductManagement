@@ -1,4 +1,5 @@
 using ProductManagement.API.Filters;
+using ProductManagement.Data.Mappers;
 using ProductManagement.Data.Repositories;
 using ProductManagement.Data.Validation.Product;
 using ProductManagement.Services.Services;
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IProductRepository, ProductRepository>();
 builder.Services.AddSingleton<IProductService, ProductService>();
 builder.Services.AddSingleton<IProductValidator, ProductValidator>();
+builder.Services.AddSingleton<IProductMapper, ProductMapper>();
 
 var app = builder.Build();
 

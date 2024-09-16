@@ -1,5 +1,3 @@
-using ProductManagement.Data.Validation;
-
 namespace ProductManagement.Data.DTO;
 
 public class ProductDto : EntityDto
