@@ -16,13 +16,12 @@ public class ProductRepository : IProductRepository
     {
         var product =
             products.Find(product => product.Id == id)
-            ?? throw new NotFoundException("Product not found");
+            ?? throw new RecordNotFoundException("Product not found");
         return await Task.FromResult(product);
     }
 
     public async Task<ProductRecord> Create(ProductRecord productRecord)
     {
-        // TODO: Add validation for valid product
         await Task.Run(() => products.Add(productRecord));
         return productRecord;
     }
@@ -34,7 +33,7 @@ public class ProductRepository : IProductRepository
             int productIndex = products.FindIndex(product => product.Id == productRecord.Id);
 
             if (productIndex == -1)
-                throw new NotFoundException("Product not found");
+                throw new RecordNotFoundException("Product not found");
 
             products[productIndex] = productRecord;
         });
@@ -46,7 +45,7 @@ public class ProductRepository : IProductRepository
         {
             var removedItems = products.RemoveAll(product => product.Id == id);
             if (removedItems == 0)
-                throw new NotFoundException("Product not found");
+                throw new RecordNotFoundException("Product not found");
         });
     }
 }

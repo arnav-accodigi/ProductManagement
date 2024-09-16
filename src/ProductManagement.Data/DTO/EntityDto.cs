@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace ProductManagement.Data.DTO;
 
 public class EntityDto

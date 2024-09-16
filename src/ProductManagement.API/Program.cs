@@ -1,5 +1,6 @@
 using ProductManagement.API.Filters;
 using ProductManagement.Data.Repositories;
+using ProductManagement.Data.Validation.Product;
 using ProductManagement.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IProductRepository, ProductRepository>();
 builder.Services.AddSingleton<IProductService, ProductService>();
+builder.Services.AddSingleton<IProductValidator, ProductValidator>();
 
 var app = builder.Build();
 

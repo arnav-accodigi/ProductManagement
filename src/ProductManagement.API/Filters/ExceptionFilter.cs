@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using ProductManagement.Data.Exceptions;
@@ -10,7 +11,7 @@ public class ExceptionFilter : IExceptionFilter
     {
         var statusCode = context.Exception switch
         {
-            NotFoundException => StatusCodes.Status404NotFound,
+            RecordNotFoundException => StatusCodes.Status404NotFound,
             ValidationException => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };

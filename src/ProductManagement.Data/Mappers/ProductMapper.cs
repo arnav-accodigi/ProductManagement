@@ -16,10 +16,11 @@ public static class ProductMapper
         };
     }
 
-    public static ProductRecord ToProductRecord(ProductDto productDto)
+    public static ProductRecord ToProductRecord(ProductDto productDto, Guid id)
     {
         return new ProductRecord()
         {
+            Id = id,
             Name = productDto.Name,
             Price = productDto.Price,
             StockQuantity = productDto.StockQuantity
