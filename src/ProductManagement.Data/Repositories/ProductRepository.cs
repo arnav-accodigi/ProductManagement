@@ -12,11 +12,14 @@ public class ProductRepository : IProductRepository
         return await Task.FromResult(products);
     }
 
+    private ProductRecord? FindProduct(Guid id)
+    {
+        return products.Find(product => product.Id == id);
+    }
+
     public async Task<ProductRecord> GetById(Guid id)
     {
-        var product =
-            products.Find(product => product.Id == id)
-            ?? throw new RecordNotFoundException("Product not found");
+        var product = FindProduct(id) ?? throw new RecordNotFoundException("Product not found");
         return await Task.FromResult(product);
     }
 
@@ -30,12 +33,11 @@ public class ProductRepository : IProductRepository
     {
         await Task.Run(() =>
         {
-            int productIndex = products.FindIndex(product => product.Id == productRecord.Id);
+            var product =
+                FindProduct(productRecord.Id)
+                ?? throw new RecordNotFoundException("Product not found");
 
-            if (productIndex == -1)
-                throw new RecordNotFoundException("Product not found");
-
-            products[productIndex] = productRecord;
+            product = productRecord;
         });
     }
 
