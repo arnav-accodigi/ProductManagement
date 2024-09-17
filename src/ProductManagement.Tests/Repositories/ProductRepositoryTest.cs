@@ -16,6 +16,16 @@ public class ProductRepositoryTests
     }
 
     [Fact]
+    public async Task GetAllProducts_ReturnsProducts_Empty()
+    {
+        // Arrange/Act
+        var products = await productRepository.GetAll();
+
+        // Assert
+        Assert.Empty(products);
+    }
+
+    [Fact]
     public async Task Create_AddsProduct()
     {
         // Arrange
