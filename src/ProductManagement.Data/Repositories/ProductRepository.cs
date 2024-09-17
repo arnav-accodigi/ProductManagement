@@ -37,7 +37,10 @@ public class ProductRepository : IProductRepository
                 FindProduct(productRecord.Id)
                 ?? throw new RecordNotFoundException("Product not found");
 
-            product = productRecord;
+            product.Id = productRecord.Id;
+            product.Name = productRecord.Name;
+            product.Price = productRecord.Price;
+            product.StockQuantity = productRecord.StockQuantity;
         });
     }
 
@@ -45,9 +48,9 @@ public class ProductRepository : IProductRepository
     {
         await Task.Run(() =>
         {
-            var removedItems = products.RemoveAll(product => product.Id == id);
-            if (removedItems == 0)
+            if (FindProduct(id) == null)
                 throw new RecordNotFoundException("Product not found");
+            products.RemoveAll(product => product.Id == id);
         });
     }
 }

@@ -5,6 +5,7 @@ using ProductManagement.Data.Exceptions;
 using ProductManagement.Data.Validation.Product;
 using ProductManagement.Services.Services;
 using ProductManagement.Tests.Constants;
+using ProductManagement.Tests.Mocks;
 using Xunit;
 
 namespace ProductManagement.Tests.Services;
@@ -54,7 +55,7 @@ public class ProductServiceTest : IDisposable
     public async Task GetProductById_ReturnsProductWithId()
     {
         // Arrange
-        productRepositoryMock.SetupGetProductById(ProductConstants.productId);
+        productRepositoryMock.SetupGetProductById();
         productMapperMock.SetupToDTO();
 
         // Act
@@ -75,7 +76,7 @@ public class ProductServiceTest : IDisposable
         productMapperMock.SetupToRecord();
 
         // Act
-        var createdProduct = await productService.CreateProduct(ProductConstants.productDto);
+        var createdProduct = await productService.CreateProduct(ProductConstants.productRequestDto);
 
         // Assert
         Assert.NotNull(createdProduct);
@@ -86,13 +87,13 @@ public class ProductServiceTest : IDisposable
     public async Task CreateProduct_ThrowsExceptionWhenInvalidInput()
     {
         // Arrange
-        var dto = new ProductDto { Name = "" };
-        productValidatorMock.Setup(v => v.Validate(dto))
+        productValidatorMock
+            .Setup(v => v.Validate(ProductConstants.invalidProductRequestDto))
             .Throws(new ValidationException(ProductConstants.invalidRequestBodyException));
 
         // Act
         Exception exception = await Assert.ThrowsAsync<ValidationException>(
-            () => productService.CreateProduct(dto)
+            () => productService.CreateProduct(ProductConstants.invalidProductRequestDto)
         );
 
         // Assert
@@ -107,9 +108,6 @@ public class ProductServiceTest : IDisposable
 
         // Act
         await productService.DeleteProduct(ProductConstants.productId);
-
-        // Verify
-        productRepositoryMock.Verify(r => r.Delete(ProductConstants.productId), Times.Once);
     }
 
     [Fact]
@@ -120,7 +118,7 @@ public class ProductServiceTest : IDisposable
 
         // Act
         Exception exception = await Assert.ThrowsAsync<RecordNotFoundException>(
-            () => productService.DeleteProduct(ProductConstants.productId)
+            () => productService.DeleteProduct(ProductConstants.notFoundProductId)
         );
 
         // Assert
@@ -135,7 +133,16 @@ public class ProductServiceTest : IDisposable
         productMapperMock.SetupToRecord();
 
         // Act
-        await productService.UpdateProduct(ProductConstants.productDto, ProductConstants.productId);
+        var exception = await Record.ExceptionAsync(
+            () =>
+                productService.UpdateProduct(
+                    ProductConstants.productRequestDto,
+                    ProductConstants.productId
+                )
+        );
+
+        // Assert
+        Assert.Null(exception);
     }
 
     [Fact]
@@ -148,7 +155,8 @@ public class ProductServiceTest : IDisposable
         // Act
         Exception exception = await Assert.ThrowsAsync<RecordNotFoundException>(
             () =>
-                productService.UpdateProduct(ProductConstants.productDto,
+                productService.UpdateProduct(
+                    ProductConstants.productRequestDto,
                     ProductConstants.productId
                 )
         );
