@@ -7,9 +7,9 @@ public class ProductRepository : IProductRepository
 {
     private readonly List<ProductRecord> products = [];
 
-    public async Task<IEnumerable<ProductRecord>> GetAll()
+    public Task<IEnumerable<ProductRecord>> GetAll()
     {
-        return await Task.FromResult(products);
+        return Task.FromResult<IEnumerable<ProductRecord>>(products);
     }
 
     private ProductRecord? FindProduct(Guid id)
@@ -17,40 +17,36 @@ public class ProductRepository : IProductRepository
         return products.Find(product => product.Id == id);
     }
 
-    public async Task<ProductRecord> GetById(Guid id)
+    public Task<ProductRecord> GetById(Guid id)
     {
         var product = FindProduct(id) ?? throw new RecordNotFoundException("Product not found");
-        return await Task.FromResult(product);
+        return Task.FromResult(product);
     }
 
-    public async Task<ProductRecord> Create(ProductRecord productRecord)
+    public Task<ProductRecord> Create(ProductRecord productRecord)
     {
-        await Task.Run(() => products.Add(productRecord));
-        return productRecord;
+        products.Add(productRecord);
+        return Task.FromResult(productRecord);
     }
 
-    public async Task Update(ProductRecord productRecord)
+    public Task Update(ProductRecord productRecord)
     {
-        await Task.Run(() =>
-        {
-            var product =
-                FindProduct(productRecord.Id)
-                ?? throw new RecordNotFoundException("Product not found");
+        var product =
+            FindProduct(productRecord.Id) ?? throw new RecordNotFoundException("Product not found");
 
-            product.Id = productRecord.Id;
-            product.Name = productRecord.Name;
-            product.Price = productRecord.Price;
-            product.StockQuantity = productRecord.StockQuantity;
-        });
+        product.Id = productRecord.Id;
+        product.Name = productRecord.Name;
+        product.Price = productRecord.Price;
+        product.StockQuantity = productRecord.StockQuantity;
+
+        return Task.CompletedTask;
     }
 
-    public async Task Delete(Guid id)
+    public Task Delete(Guid id)
     {
-        await Task.Run(() =>
-        {
-            if (FindProduct(id) == null)
-                throw new RecordNotFoundException("Product not found");
-            products.RemoveAll(product => product.Id == id);
-        });
+        if (FindProduct(id) == null)
+            throw new RecordNotFoundException("Product not found");
+        products.RemoveAll(product => product.Id == id);
+        return Task.CompletedTask;
     }
 }
