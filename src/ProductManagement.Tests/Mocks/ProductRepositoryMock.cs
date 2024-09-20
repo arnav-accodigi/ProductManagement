@@ -12,6 +12,13 @@ public class ProductRepositoryMock : Mock<IProductRepository>
     public ProductRepositoryMock()
         : base(MockBehavior.Strict) { }
 
+    private bool Matches(ProductRecord productRecord)
+    {
+        return productRecord.Name == ProductConstants.productName
+            && productRecord.Price == ProductConstants.productPrice
+            && productRecord.StockQuantity == ProductConstants.productStockQuantity;
+    }
+
     public void SetupGetAllProducts()
     {
         Setup(r => r.GetAll()).ReturnsAsync([ProductConstants.productRecord]);
@@ -19,15 +26,7 @@ public class ProductRepositoryMock : Mock<IProductRepository>
 
     public void SetupCreateProduct()
     {
-        Setup(r =>
-                r.Create(
-                    It.Is<ProductRecord>(p =>
-                        p.Name == ProductConstants.productRecord.Name
-                        && p.Price == ProductConstants.productRecord.Price
-                        && p.StockQuantity == ProductConstants.productRecord.StockQuantity
-                    )
-                )
-            )
+        Setup(r => r.Create(It.Is<ProductRecord>(p => Matches(p))))
             .ReturnsAsync(ProductConstants.productRecord);
     }
 
@@ -56,29 +55,12 @@ public class ProductRepositoryMock : Mock<IProductRepository>
 
     public void SetupUpdateProduct()
     {
-        Setup(r =>
-                r.Update(
-                    It.Is<ProductRecord>(p =>
-                        p.Name == ProductConstants.productRecord.Name
-                        && p.Price == ProductConstants.productRecord.Price
-                        && p.StockQuantity == ProductConstants.productRecord.StockQuantity
-                    )
-                )
-            )
-            .Returns(Task.CompletedTask);
+        Setup(r => r.Update(It.Is<ProductRecord>(p => Matches(p)))).Returns(Task.CompletedTask);
     }
 
     public void SetupUpdateProductNotFound()
     {
-        Setup(r =>
-                r.Update(
-                    It.Is<ProductRecord>(p =>
-                        p.Name == ProductConstants.productRecord.Name
-                        && p.Price == ProductConstants.productRecord.Price
-                        && p.StockQuantity == ProductConstants.productRecord.StockQuantity
-                    )
-                )
-            )
+        Setup(r => r.Update(It.Is<ProductRecord>(p => Matches(p))))
             .ThrowsAsync(new RecordNotFoundException(ProductConstants.notFoundMessage));
     }
 

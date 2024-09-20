@@ -4,6 +4,11 @@ using ProductManagement.Data.Exceptions;
 
 namespace ProductManagement.API.Controllers;
 
+public class ErrorResponse(string errorMessage)
+{
+    public string Error { get; set; } = errorMessage;
+}
+
 public abstract class BaseController : ControllerBase
 {
     protected async Task<IActionResult> HandleAsync(Func<Task<IActionResult>> func)
@@ -21,7 +26,7 @@ public abstract class BaseController : ControllerBase
                 ValidationException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
-            return new ObjectResult(new { error = ex.Message }) { StatusCode = statusCode };
+            return new ObjectResult(new ErrorResponse(ex.Message)) { StatusCode = statusCode };
         }
     }
 }

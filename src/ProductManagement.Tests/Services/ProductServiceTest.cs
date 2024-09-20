@@ -14,19 +14,16 @@ public class ProductServiceTest : IDisposable
 {
     private readonly ProductRepositoryMock productRepositoryMock;
     private readonly Mock<IProductValidator> productValidatorMock;
-    private readonly ProductMapperMock productMapperMock;
     private readonly IProductService productService;
 
     public ProductServiceTest()
     {
         productRepositoryMock = new ProductRepositoryMock();
         productValidatorMock = new Mock<IProductValidator>();
-        productMapperMock = new ProductMapperMock();
 
         productService = new ProductService(
             productRepositoryMock.Object,
-            productValidatorMock.Object,
-            productMapperMock.Object
+            productValidatorMock.Object
         );
     }
 
@@ -34,14 +31,12 @@ public class ProductServiceTest : IDisposable
     {
         productRepositoryMock.VerifyAll();
         productValidatorMock.VerifyAll();
-        productMapperMock.VerifyAll();
     }
 
     [Fact]
     public async Task GetAllProducts_ReturnsProductList()
     {
         productRepositoryMock.SetupGetAllProducts();
-        productMapperMock.SetupToDTO();
 
         // Act
         var productsReturned = await productService.GetAllProducts();
@@ -56,7 +51,6 @@ public class ProductServiceTest : IDisposable
     {
         // Arrange
         productRepositoryMock.SetupGetProductById();
-        productMapperMock.SetupToDTO();
 
         // Act
         var product = await productService.GetProductById(ProductConstants.productId);
@@ -72,8 +66,6 @@ public class ProductServiceTest : IDisposable
     {
         // Arrange
         productRepositoryMock.SetupCreateProduct();
-        productMapperMock.SetupToDTO();
-        productMapperMock.SetupToRecord();
 
         // Act
         var createdProduct = await productService.CreateProduct(ProductConstants.productRequestDto);
@@ -130,7 +122,6 @@ public class ProductServiceTest : IDisposable
     {
         // Arrange
         productRepositoryMock.SetupUpdateProduct();
-        productMapperMock.SetupToRecord();
 
         // Act
         var exception = await Record.ExceptionAsync(
@@ -150,7 +141,6 @@ public class ProductServiceTest : IDisposable
     {
         // Arrange
         productRepositoryMock.SetupUpdateProductNotFound();
-        productMapperMock.SetupToRecord();
 
         // Act
         Exception exception = await Assert.ThrowsAsync<RecordNotFoundException>(

@@ -9,13 +9,16 @@ public static class ProductConstants
     public static Guid notFoundProductId = new("14da6f7a-590c-48bf-9774-9f5678476dbb");
     public static string notFoundMessage = "Product not found";
     public static string invalidRequestBodyException = "Invalid request body";
+    public static string productName = "Test product";
+    public static decimal productPrice = 10m;
+    public static int productStockQuantity = 100;
     public static ProductDto productResponseDto =
         new()
         {
             Id = productId,
-            Name = "Test product",
-            Price = 10m,
-            StockQuantity = 100
+            Name = productName,
+            Price = productPrice,
+            StockQuantity = productStockQuantity
         };
 
     public static ProductDto invalidProductRequestDto = new() { Name = "" };
@@ -23,17 +26,17 @@ public static class ProductConstants
     public static ProductDto productRequestDto =
         new()
         {
-            Name = "Test product",
-            Price = 10m,
-            StockQuantity = 100
+            Name = productName,
+            Price = productPrice,
+            StockQuantity = productStockQuantity
         };
 
     public static ProductRecord productRecord =
         new()
         {
             Id = productId,
-            Name = "Test product",
-            Price = 10m,
-            StockQuantity = 100
+            Name = productName,
+            Price = productPrice,
+            StockQuantity = productStockQuantity
         };
 }

@@ -8,6 +8,8 @@ using ProductManagement.Tests.Constants;
 using ProductManagement.Tests.Mocks;
 using Xunit;
 
+namespace ProductManagement.Tests.Controllers;
+
 public class ProductControllerTest : IDisposable
 {
     public ProductController productController;
@@ -60,19 +62,21 @@ public class ProductControllerTest : IDisposable
     }
 
     [Fact]
-    public async Task CreateProduct_ThrowsExceptionWhenInvalidInput()
+    public async Task CreateProduct_ReturnsErrorResponseWithInvalidInput()
     {
         // Arrange
         productServiceMock.SetupCreateProductWithInvalidDto();
 
         // Act
-        Exception exception = await Assert.ThrowsAsync<ValidationException>(
-            () => productController.CreateProduct(ProductConstants.invalidProductRequestDto)
-        );
+        var response =
+            await productController.CreateProduct(ProductConstants.invalidProductRequestDto)
+            as ObjectResult;
 
         // Assert
-        Assert.IsType<ValidationException>(exception);
-        Assert.Equal(ProductConstants.invalidRequestBodyException, exception.Message);
+        Assert.NotNull(response?.Value);
+        var errorMessage = response.Value as ErrorResponse;
+        Assert.NotNull(errorMessage?.Error);
+        Assert.Equal("Invalid request body", errorMessage?.Error);
     }
 
     [Fact]
@@ -94,19 +98,20 @@ public class ProductControllerTest : IDisposable
     }
 
     [Fact]
-    public async Task GetProduct_ThrowsExceptionWhenNotFound()
+    public async Task GetProduct_ReturnsErrorResponseWhenNotFound()
     {
         // Arrange
         productServiceMock.SetupGetProductByIdNotFound();
 
         // Act
-        Exception exception = await Assert.ThrowsAsync<RecordNotFoundException>(
-            () => productController.GetProduct(ProductConstants.notFoundProductId)
-        );
+        var response =
+            await productController.GetProduct(ProductConstants.notFoundProductId) as ObjectResult;
 
         // Assert
-        Assert.IsType<RecordNotFoundException>(exception);
-        Assert.Equal(ProductConstants.notFoundMessage, exception.Message);
+        Assert.NotNull(response?.Value);
+        var errorMessage = response.Value as ErrorResponse;
+        Assert.NotNull(errorMessage?.Error);
+        Assert.Equal("Product not found", errorMessage?.Error);
     }
 
     [Fact]
@@ -120,19 +125,21 @@ public class ProductControllerTest : IDisposable
     }
 
     [Fact]
-    public async Task DeleteProduct_ThrowsExceptionWhenNotFound()
+    public async Task DeleteProduct_ReturnsErrorResponseWhenNotFound()
     {
         // Arrange
         productServiceMock.SetupDeleteProductNotFound();
 
         // Act
-        Exception exception = await Assert.ThrowsAsync<RecordNotFoundException>(
-            () => productController.DeleteProduct(ProductConstants.notFoundProductId)
-        );
+        var response =
+            await productController.DeleteProduct(ProductConstants.notFoundProductId)
+            as ObjectResult;
 
         // Assert
-        Assert.IsType<RecordNotFoundException>(exception);
-        Assert.Equal(ProductConstants.notFoundMessage, exception.Message);
+        Assert.NotNull(response?.Value);
+        var errorMessage = response.Value as ErrorResponse;
+        Assert.NotNull(errorMessage?.Error);
+        Assert.Equal("Product not found", errorMessage?.Error);
     }
 
     [Fact]
@@ -149,42 +156,42 @@ public class ProductControllerTest : IDisposable
     }
 
     [Fact]
-    public async Task UpdateProduct_ThrowsExceptionWhenNotFound()
+    public async Task UpdateProduct_ReturnsErrorResponseWhenNotFound()
     {
         // Arrange
         productServiceMock.SetupUpdateProductNotFound();
 
         // Act
-        Exception exception = await Assert.ThrowsAsync<RecordNotFoundException>(
-            () =>
-                productController.UpdateProduct(
-                    ProductConstants.productRequestDto,
-                    ProductConstants.notFoundProductId
-                )
-        );
+        var response =
+            await productController.UpdateProduct(
+                ProductConstants.productRequestDto,
+                ProductConstants.notFoundProductId
+            ) as ObjectResult;
 
         // Assert
-        Assert.IsType<RecordNotFoundException>(exception);
-        Assert.Equal(ProductConstants.notFoundMessage, exception.Message);
+        Assert.NotNull(response?.Value);
+        var errorMessage = response.Value as ErrorResponse;
+        Assert.NotNull(errorMessage?.Error);
+        Assert.Equal("Product not found", errorMessage?.Error);
     }
 
     [Fact]
-    public async Task UpdateProduct_ThrowsExceptionWhenInvalidInput()
+    public async Task UpdateProduct_ReturnsErrorResponseWhenInvalidInput()
     {
         // Arrange
         productServiceMock.SetupUpdateProductInvalidInput();
 
         // Act
-        Exception exception = await Assert.ThrowsAsync<ValidationException>(
-            () =>
-                productController.UpdateProduct(
-                    ProductConstants.invalidProductRequestDto,
-                    ProductConstants.productId
-                )
-        );
+        var response =
+            await productController.UpdateProduct(
+                ProductConstants.invalidProductRequestDto,
+                ProductConstants.productId
+            ) as ObjectResult;
 
         // Assert
-        Assert.IsType<ValidationException>(exception);
-        Assert.Equal(ProductConstants.invalidRequestBodyException, exception.Message);
+        Assert.NotNull(response?.Value);
+        var errorMessage = response.Value as ErrorResponse;
+        Assert.NotNull(errorMessage?.Error);
+        Assert.Equal("Invalid request body", errorMessage?.Error);
     }
 }

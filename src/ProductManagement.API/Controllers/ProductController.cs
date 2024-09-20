@@ -16,6 +16,8 @@ public class ProductController : BaseController
     }
 
     [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(IEnumerable<ProductDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllProducts()
     {
         return await HandleAsync(async () =>
@@ -26,6 +28,8 @@ public class ProductController : BaseController
     }
 
     [HttpGet("{id}")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProduct(Guid id)
     {
         return await HandleAsync(async () =>
@@ -36,6 +40,8 @@ public class ProductController : BaseController
     }
 
     [HttpPost]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(ProductDto), StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateProduct([FromBody] ProductDto productDto)
     {
         return await HandleAsync(async () =>
